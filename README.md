@@ -1,8 +1,8 @@
 # Cumulative Distribution Function (CDF) Panel
 
-![https://github.com/sebastiangunreben/sebastiangunreben-cdf-plugin/blob/main/src/img/first.png](CDF in action 1)
+![CDF in action 1](https://github.com/sebastiangunreben/sebastiangunreben-cdf-plugin/blob/main/src/img/first.png)
 
-![https://github.com/sebastiangunreben/sebastiangunreben-cdf-plugin/blob/main/src/img/second.png](CDF in action 2)
+![CDF in action 2](https://github.com/sebastiangunreben/sebastiangunreben-cdf-plugin/blob/main/src/img/second.png)
 
 ## What does the CDF panel plugin show?
 
