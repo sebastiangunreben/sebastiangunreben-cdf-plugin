@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import * as d3 from 'd3';
 import { VizLayout, VizLegend, LegendDisplayMode, VizLegendItem } from '@grafana/ui';
-import { applyFieldOverrides, ConfigOverrideRule, PanelProps } from '@grafana/data';
+import { getColorByName, getColorForTheme, applyFieldOverrides, ConfigOverrideRule, PanelProps } from '@grafana/data';
 import { CdfPanelOptions } from 'types';
 import { ColData } from 'types';
 import { MarginPair } from 'types';
@@ -217,7 +217,8 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
         yAxis = yAxis.tickSize(+xMargins.lower + xMargins.upper - width);
     }
 
-    function onLegendClick(item, color) {
+    function onLegendClick(item, _color) {
+        let color = getColorForTheme(_color,theme));
         let mc: MatcherConfig = {id: "byName", options: item};
         let properties: DynamicConfigValue = { id: "color",
             value: {"fixedColor": color, "mode": "fixed"} };
