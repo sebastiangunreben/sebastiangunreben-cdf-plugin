@@ -16,12 +16,14 @@ expection of the value distribution.
 
 ### Example
 A query responses with the following series:
+
 | time | value |
 | ---  |:-----:|
 | t1   | 1 |
 | t2   | 5 |
 | t3   | 3 |
 | t4   | 2 |
+
 The time values (t1, t2, t3, t4) are ignored and not processed.
 Only relevant are the values 1, 5, 3, 2.
 The probability of a value "x" to be less than X=3 is P(x <= 3) = 0.75
