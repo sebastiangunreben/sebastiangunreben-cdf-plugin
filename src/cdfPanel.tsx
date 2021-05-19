@@ -13,7 +13,9 @@ import { FALLBACK_COLOR, SeriesColorChangeHandler, SeriesVisibilityChangeBehavio
 interface Props extends PanelProps<CdfPanelOptions> {}
 
 
-
+/**
+ * Draw legend
+ */
 function getLegend(colNames, onLegendClick ) {
      let legends = colNames.map<VizLegendItem>((f, i) => {
         return {
@@ -33,6 +35,9 @@ function getLegend(colNames, onLegendClick ) {
             onSeriesColorChange={onLegendClick} />;
 }
 
+/**
+ * Draw threshold lines
+ */
 function drawThresholds(thresholds : ThresholdPair, xScale, yScale) {
 
     if(! thresholds ) return (<div/>);
@@ -58,6 +63,9 @@ function drawThresholds(thresholds : ThresholdPair, xScale, yScale) {
     )
 }
 
+/**
+ * Draw title of the yaxis
+ */
 function drawYTitle(options: CdfPanelOptions, width: number, height: number, xMargins: MarginPair, yMargins: MarginPair) {
   const title = options.yAxisTitle;
   if (title.text) {
@@ -85,12 +93,14 @@ function drawYTitle(options: CdfPanelOptions, width: number, height: number, xMa
   return null;
 }
 
+/**
+ * Draw title of the xaxis
+ */
 function drawXTitle(options: CdfPanelOptions, width: number, height: number, xMargins: MarginPair, yMargins: MarginPair) {
   const title = options.xAxisTitle;
   if (title.text) {
     const yoffset = 20;
 
-    //yMargins.lower = Math.max(yoffset + title.textSize, yMargins.lower);
     let label_length = title.text.length * title.textSize / 6;
 
     return (
@@ -218,7 +228,9 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
     }
 
     function onLegendClick(item, _color) {
-        let color = getColorForTheme(_color,theme);
+        let color = theme.visualization ? 
+            theme.visualization.getColorByName(_color) 
+            : getColorForTheme(_color,theme);
         let mc: MatcherConfig = {id: "byName", options: item};
         let properties: DynamicConfigValue = { id: "color",
             value: {"fixedColor": color, "mode": "fixed"} };
