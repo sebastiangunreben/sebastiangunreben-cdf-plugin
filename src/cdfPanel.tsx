@@ -218,7 +218,7 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
     }
 
     function onLegendClick(item, _color) {
-        let color = getColorForTheme(_color,theme));
+        let color = getColorForTheme(_color,theme);
         let mc: MatcherConfig = {id: "byName", options: item};
         let properties: DynamicConfigValue = { id: "color",
             value: {"fixedColor": color, "mode": "fixed"} };
