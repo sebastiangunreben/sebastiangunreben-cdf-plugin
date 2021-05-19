@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "panel",
+  "name": "CDF - Cumulative Distribution Function",
+  "id": "sebastiangunreben-cdf-panel",
+  "info": {
+    "description": "Panel for CDF visualizations",
+    "author": {
+      "name": "Sebastian Gunreben",
+      "url": "http://grafana.com"
+    },
+    "keywords": [
+      "cdf",
+      "cumulative distribution function"
+    ],
+    "logos": {
+      "small": "img/logo_small.svg",
+      "large": "img/logo_large.svg"
+    },
+    "links": [
+      {
+        "name": "Wikipendia: Cumulative Distribution Function",
+        "url": "https://en.wikipedia.org/wiki/Cumulative_distribution_function"
+      },
+      {
+        "name": "License",
+        "url": "https://github.com/grafana/grafana-starter-panel/blob/master/LICENSE"
+      }
+    ],
+    "screenshots": ["img/first.png", "img/second.png"],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaDependency": ">=7.0.0",
+    "plugins": []
+  }
+}
