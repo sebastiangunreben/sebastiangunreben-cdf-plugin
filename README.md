@@ -1,4 +1,3 @@
-# sebastiangunreben-cdf-plugin
 # Cumulative Distribution Function (CDF) Panel
 
 ## What does the CDF panel plugin show?
