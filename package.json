@@ -1,6 +1,6 @@
 {
   "name": "sebastiangunreben-cdf-panel",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "Panel for the visualizations of P(X <= x)",
   "scripts": {
     "build": "grafana-toolkit plugin:build",
