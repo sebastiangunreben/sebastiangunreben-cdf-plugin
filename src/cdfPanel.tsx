@@ -129,15 +129,14 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
     const [count, setCount] = useState(0);
     const theme = useTheme();
     const styles = getStyles();
-    const xMargins = new MarginPair(options.xMargins.lower || 0, options.xMargins.upper || 0);
-    const yMargins = new MarginPair(options.yMargins.lower || 0, options.yMargins.upper || 0);
+    const xMargins = { "lower": options.xMargins.lower || 0, 
+                        "upper": options.xMargins.upper || 0};
+    const yMargins = { "lower": options.yMargins.lower || 0,
+                        "upper": options.yMargins.upper || 0};
 
     let xmax = Number.MIN_SAFE_INTEGER;
     let xmin = Number.MAX_SAFE_INTEGER;
     const lineWidth = options.linewidth || 3;
-
-    //const [fieldConfig, setValue] = useState(fieldConfig);
-    //console.log("FieldConfig:", fieldConfig);
 
     let overriderOptions: ApplyFieldOverrideOptions = 
         {
@@ -215,7 +214,7 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
 
     //console.log(series_points);
 
-    series_points.forEach( s => {s.calc_data_points(xScale, yScale);});
+    series_points.forEach( s => {s.calc_data_points(xScale, yScale, xExtent);});
 
     let xAxis = d3.axisBottom(xScale);
     if (options.showXGrid ) {

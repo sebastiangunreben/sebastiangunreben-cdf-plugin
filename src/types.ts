@@ -16,55 +16,37 @@ export interface CdfPanelOptions {
 }
 
 
-export class Label {
-  constructor(
-    public col: number,
-  ) {
-  }
+export interface Label {
+    col: number,
 }
 
-export class ThresholdPair {
-  constructor(
-    public lower: number,
-    public lowerLabel: string,
-    public upper: number,
-    public upperLabel: string,
-  ) {
-  }
+export interface ThresholdPair {
+    lower: number,
+    lowerLabel: string,
+    upper: number,
+    upperLabel: string,
 }
 
-export class MarginPair {
-  constructor(
-    public lower: number,
-    public upper: number,
-  ) {
-  }
+export interface MarginPair {
+    lower: number,
+    upper: number,
 }
 
-export class Title {
-  constructor(
-    public text: string,
-    public color: string,
-    public textSize: number,
-  ) {
-  }
+export interface Title {
+    text: string,
+    color: string,
+    textSize: number,
 }
 
 
-export class XAxis {
-  constructor(
-    public col: number,
-    public inverted: boolean,
-  ) {
-  }
+export interface XAxis {
+    col: number,
+    inverted: boolean,
 }
 
-export class Extents {
-  constructor(
-    public min: number,
-    public max: number,
-  ) {
-  }
+export interface Extents {
+    min: number,
+    max: number,
 }
 
 export class ColData {
@@ -84,11 +66,18 @@ export class ColData {
         .filter((v,i,a) => ( !isNaN(v) && typeof v === "number"))
         .sort((n1,n2) => n1 - n2);
   }
-  calc_data_points( xScale: Function, yScale: Function )
+  in_scale (v: number, xExtents: number[]) { 
+    return ((isNaN(xExtents[0]) || (!isNaN(xExtents[0]) && xExtents[0] <= v))
+            &&
+           (isNaN(xExtents[1]) || (!isNaN(xExtents[1]) && xExtents[1] >= v)))
+  }
+  calc_data_points( xScale: Function, yScale: Function, xExtents: number[] )
     {
-        this.point_list = this.values?.map((v, i, a) => 
-            [xScale(v), yScale((i+1)/a.length)].join(",")).join(" ");
-
-
+        this.point_list = this.values?.map((v, i, a) => {
+            if( this.in_scale(v, xExtents)){
+                return [xScale(v), yScale((i+1)/a.length)].join(",")
+            }
+        }
+        ).join(" ");
     }
 }
