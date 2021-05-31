@@ -1,5 +1,5 @@
 # Changelog
 
-## 1.0.0 (Unreleased)
-
-Initial release.
+## 0.1.2
+- Initial Release
+- CDF: cumulative distribution function panel plugin

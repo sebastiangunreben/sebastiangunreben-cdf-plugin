@@ -1,8 +1,7 @@
 # Cumulative Distribution Function (CDF) Panel
 
-![CDF in action 1](https://github.com/sebastiangunreben/sebastiangunreben-cdf-plugin/blob/main/src/img/first.png)
-
-![CDF in action 2](https://github.com/sebastiangunreben/sebastiangunreben-cdf-plugin/blob/main/src/img/second.png)
+If you already know what a CDF is you may skip the next sections and directly
+jump to the bottom to check out the steps to install this plugin.
 
 ## What does the CDF panel plugin show?
 
@@ -11,8 +10,13 @@ values. Statistically speaking, it shows P(x <= X).
 It shows the frequency/probability P of a certain value "x" to be less than
 "X".
 
+![CDF in action 1](https://github.com/sebastiangunreben/sebastiangunreben-cdf-plugin/blob/main/src/img/first.png)
+
 The CDF may be used to quantify the amount of outliers not fitting into the
 expection of the value distribution.
+
+![CDF in action 2](https://github.com/sebastiangunreben/sebastiangunreben-cdf-plugin/blob/main/src/img/second.png)
+
 
 ### Example
 A query responses with the following series:
@@ -69,4 +73,9 @@ This panel allows a flavor of config options:
 
 # Learn more
 
-[CDF at Wikipedia](https://en.wikipedia.org/wiki/Cumulative_distribution_function)
+* [Howto install this plugin in Grafana](https://grafana.com/docs/grafana/latest/plugins/installation/)
+* [CDF at Wikipedia](https://en.wikipedia.org/wiki/Cumulative_distribution_function)
+* [d3js](https://d3js.org/)
+* [ReactJS](https://reactjs.org/)
+* [TypeScript](https://www.typescriptlang.org/)
+
