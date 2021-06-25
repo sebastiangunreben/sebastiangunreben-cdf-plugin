@@ -10,12 +10,12 @@ values. Statistically speaking, it shows P(x <= X).
 It shows the frequency/probability P of a certain value "x" to be less than
 "X".
 
-![CDF in action 1](https://github.com/sebastiangunreben/sebastiangunreben-cdf-plugin/blob/main/src/img/first.png)
+![CDF in action 1](https://github.com/telekom/sebastiangunreben-cdf-plugin/blob/main/src/img/first.png?raw=true)
 
 The CDF may be used to quantify the amount of outliers not fitting into the
 expection of the value distribution.
 
-![CDF in action 2](https://github.com/sebastiangunreben/sebastiangunreben-cdf-plugin/blob/main/src/img/second.png)
+![CDF in action 2](https://github.com/telekom/sebastiangunreben-cdf-plugin/blob/main/src/img/second.png?raw=true)
 
 
 ### Example
@@ -51,7 +51,7 @@ probability from 0 to 1.
 This panel allows a flavor of config options:
 
 ### X-Axis
-![X-Axis config options](https://github.com/sebastiangunreben/sebastiangunreben-cdf-plugin/blob/main/src/img/xaxis.png)
+![X-Axis config options](https://github.com/telekom/sebastiangunreben-cdf-plugin/blob/main/src/img/xaxis.png?raw=true)
 * Show grid
 * Visualize thresholds on x-axis
 ..* min threshold with value and label
@@ -61,13 +61,13 @@ This panel allows a flavor of config options:
 * Margins for proper vizualization
 
 ### Y-Axis
-![Y-Axis config options](https://github.com/sebastiangunreben/sebastiangunreben-cdf-plugin/blob/main/src/img/yaxis.png)
+![Y-Axis config options](https://github.com/telekom/sebastiangunreben-cdf-plugin/blob/main/src/img/yaxis.png?raw=true)
 * Show grid
 * Change title
 * Margins for proper vizualization
 
 ### Display
-![Display config options](https://github.com/sebastiangunreben/sebastiangunreben-cdf-plugin/blob/main/src/img/display.png)
+![Display config options](https://github.com/telekom/sebastiangunreben-cdf-plugin/blob/main/src/img/display.png?raw=true)
 * Change color per series
 * Change stroke witdth
 

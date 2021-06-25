@@ -24,8 +24,7 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
      name:"X Axis Title",
      category:["X Axis"],
      editor: TitleEditor,
-     //defaultValue: new Title("XAxis Title","#909090", 12),
-     settings: {text : "test"}
+     defaultValue: {text : "XAxis Title", textSize : 12}
     })
     .addCustomEditor({
      id:"xMargins",
@@ -33,7 +32,7 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
      name:"Margins (Left/Right)",
      category:["X Axis"],
      editor: MarginPairEditor,
-     settings: { "lower": 30, "upper": 10, }
+     defaultValue: {lower:30, upper:10},
     })
     .addCustomEditor({
      id:"xAxisExtents",
@@ -41,7 +40,7 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
      name:"X Axis Field (Min/Max)",
      category:["X Axis"],
      editor: ExtentsEditor,
-     settings: {"min": NaN, "max" : NaN },
+     defaultValue: {min: "", max : "" },
     })
     .addBooleanSwitch({
       path: 'showThresholds',
@@ -72,7 +71,7 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
      category:["Y Axis"],
      editor: TitleEditor,
      //defaultValue: new Title("P(x <= X)","#909090", 12),
-     settings: {text : "P(x <= X)"}
+     defaultValue: {text : "P(x <= X)", textSize : 12}
     })
     .addCustomEditor({
       id: 'yMargins',
@@ -80,7 +79,7 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
       name: 'Margins (Bottom/Top)',
       category: ['Y Axis'],
       editor: MarginPairEditor,
-      defaultValue: { "lower": 30, "upper": 10, },
+      defaultValue: {lower:30, upper:10},
     })
     .addBooleanSwitch({
       path: 'showYGrid',
