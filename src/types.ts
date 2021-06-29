@@ -51,7 +51,7 @@ export interface Extents {
 
 export class ColData {
   point_list: string = "";
-  readonly values: number[];
+  private readonly mvalues: Array<number>;
   constructor(
     public name: string,
     public displayName: string,
@@ -62,7 +62,7 @@ export class ColData {
     public index: number,
     public field: Field,
   ) {
-    this.values = val
+    this.mvalues = val
         .filter((v,i,a) => ( !isNaN(v) && typeof v === "number"))
         .sort((n1,n2) => n1 - n2);
   }
@@ -73,11 +73,12 @@ export class ColData {
   }
   calc_data_points( xScale: Function, yScale: Function, xExtents: number[] )
     {
-        this.point_list = this.values?.map((v, i, a) => {
+        let num_val = this.mvalues.length;
+        this.point_list = Array.from(this.mvalues, (v, i, a) => {
             if( this.in_scale(v, xExtents)){
-                return [xScale(v), yScale((i+1)/a.length)].join(",")
+                let obj=[xScale(v), yScale((i+1)/num_val)].join(",");
+                return obj;
             }
-        }
-        ).join(" ");
+        }).join(" ");
     }
 }

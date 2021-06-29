@@ -7,7 +7,7 @@
     "description": "Panel for CDF visualizations",
     "author": {
       "name": "Sebastian Gunreben",
-      "url": "http://grafana.com"
+      "url": "https://github.com/sebastiangunreben"
     },
     "keywords": [
       "cdf",
@@ -24,7 +24,7 @@
       },
       {
         "name": "License",
-        "url": "https://github.com/grafana/grafana-starter-panel/blob/master/LICENSE"
+        "url": "https://www.apache.org/licenses/LICENSE-2.0"
       }
     ],
     "screenshots": [

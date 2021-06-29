@@ -138,6 +138,8 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
     let xmin = Number.MAX_SAFE_INTEGER;
     const lineWidth = options.linewidth || 3;
 
+    console.log(fieldConfig);
+
     let overriderOptions: ApplyFieldOverrideOptions = 
         {
             data: data.series,
@@ -157,8 +159,6 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
         return colors[idx % colors.length];
     }
 
-
-    //console.log(applyFieldOverrides(overriderOptions));
     const series_points = applyFieldOverrides(overriderOptions)
         .map((s, idx) => {
                 const field = s.fields.find(field => field.type === "number");
@@ -195,6 +195,7 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
 
     const yExtent = [0, 1] as number[];
 
+
     const xScale = d3
         .scaleLinear()
         .nice()
@@ -212,14 +213,17 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
 
     const thresholds = drawThresholds( options.thresholds, xScale, yScale ); 
 
-    //console.log(series_points);
 
     series_points.forEach( s => {s.calc_data_points(xScale, yScale, xExtent);});
-
     let xAxis = d3.axisBottom(xScale);
     if (options.showXGrid ) {
         xAxis = xAxis.tickSize(+yMargins.upper + yMargins.lower - height);
     }
+
+    if ( fieldConfig.defaults.hasOwnProperty("unit") ) {
+        xAxis.tickFormat(function(d){ return d + " " + fieldConfig.defaults.unit});
+    }
+
 
     let yAxis = d3.axisLeft(yScale);
     if (options.showYGrid ) {

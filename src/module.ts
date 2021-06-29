@@ -32,7 +32,7 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
      name:"Margins (Left/Right)",
      category:["X Axis"],
      editor: MarginPairEditor,
-     defaultValue: {lower:30, upper:10},
+     defaultValue: {lower:40, upper:10},
     })
     .addCustomEditor({
      id:"xAxisExtents",
@@ -54,8 +54,8 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
      name:"Thresholds",
      category:["X Axis"],
      editor: ThresholdPairEditor,
-     settings: {"lower": NaN, "lowerLabel": "",
-                "upper": NaN, "upperLanel": "", },
+     defaultValue: {"lower": null, "lowerLabel": "",
+                "upper": null, "upperLanel": "", },
      showIf: config => config.showThresholds,
     })
     .addBooleanSwitch({
@@ -79,7 +79,7 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
       name: 'Margins (Bottom/Top)',
       category: ['Y Axis'],
       editor: MarginPairEditor,
-      defaultValue: {lower:30, upper:10},
+      defaultValue: {lower:40, upper:10},
     })
     .addBooleanSwitch({
       path: 'showYGrid',
