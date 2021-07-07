@@ -6,6 +6,34 @@ import { Title } from '../types';
 interface Props extends StandardEditorProps<Title> { }
 
 export const TitleEditor: React.FC<Props> = ({ value, onChange }) => {
+
+  const yoffset = value.showyoffset ? ( <div className="inputBox">
+        <Input
+          type="number"
+          min={0}
+          max={50}
+          title="YOffset"
+          value={value.yoffset}
+          onChange={(e) => {
+            value.yoffset = (e.target as HTMLInputElement).valueAsNumber;
+            onChange(value);
+          }}
+        />
+      </div> ): null;
+  const xoffset = value.showxoffset ?  (<div className="inputBox">
+        <Input
+          type="number"
+          min={0}
+          max={50}
+          title="XOffset"
+          value={value.xoffset}
+          onChange={(e) => {
+            value.xoffset = (e.target as HTMLInputElement).valueAsNumber;
+            onChange(value);
+          }}
+        />
+      </div> ) : null;
+
   return (
     <div className="inputBox">
       <div className="inputBox">
@@ -20,7 +48,7 @@ export const TitleEditor: React.FC<Props> = ({ value, onChange }) => {
       </div>
       <div className="inputBox">
         <Input
-          type="hidden"
+          type="number"
           min={0}
           max={30}
           title="Set size of text"
@@ -31,5 +59,7 @@ export const TitleEditor: React.FC<Props> = ({ value, onChange }) => {
           }}
         />
       </div>
+      {xoffset}
+      {yoffset}
     </div>);
 };

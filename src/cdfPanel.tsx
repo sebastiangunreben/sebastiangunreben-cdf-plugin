@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import * as d3 from 'd3';
-import { VizLayout, VizLegend, LegendDisplayMode, VizLegendItem } from '@grafana/ui';
+import {  UPlotConfigBuilder, UPlotChart,VizLayout, VizLegend, LegendDisplayMode, VizLegendItem } from '@grafana/ui';
 import { getColorByName, getColorForTheme, applyFieldOverrides, ConfigOverrideRule, PanelProps } from '@grafana/data';
 import { CdfPanelOptions } from 'types';
 import { ColData } from 'types';
@@ -10,13 +10,14 @@ import { stylesFactory, useTheme } from '@grafana/ui';
 import { FALLBACK_COLOR, SeriesColorChangeHandler, SeriesVisibilityChangeBehavior, CustomScrollbar, EmptySearchResult, colors, SeriesColorPickerPopover } from '@grafana/ui';
 
 
+
 interface Props extends PanelProps<CdfPanelOptions> {}
 
 
 /**
  * Draw legend
  */
-function getLegend(colNames, onLegendClick ) {
+function getLegend(colNames, onLegendClick, _placement, _onLabelClick, displaymode ) {
      let legends = colNames.map<VizLegendItem>((f, i) => {
         return {
             color: f.color ?? FALLBACK_COLOR,
@@ -27,11 +28,15 @@ function getLegend(colNames, onLegendClick ) {
             getItemKey: () => (f.displayName ?? "") + i,
         };});
 
+    let ldm = (displaymode === "Table") ? LegendDisplayMode.Table 
+            : LegendDisplayMode.List;;
+    let placement = _placement ? _placement : "bottom";
 
     return  <VizLegend 
             items={legends} 
-            placement="bottom" 
-            displayMode={LegendDisplayMode.List} 
+            placement={placement}
+            displayMode={ldm} 
+            onLabelClick={_onLabelClick}
             onSeriesColorChange={onLegendClick} />;
 }
 
@@ -51,7 +56,7 @@ function drawThresholds(thresholds : ThresholdPair, xScale, yScale) {
     let tLower = xL ? <line x1={xL} y1={Nee} x2={xL} y2={Ein} stroke="red" /> : null; 
     let tLowerLabel = xL ? <text fill="red" x={xL} y={Nee+yTextOffset}>{thresholds.lowerLabel}</text> : null
     let tUpper = xU ? <line x1={xU} y1={Nee} x2={xU} y2={Ein} stroke="red" /> : null; 
-    let tUpperLabel = thresholds.upper ? <text fill="red" x={xU} y={Nee+yTextOffset}>{thresholds.upperLabel}</text> : null
+    let tUpperLabel = xU ? <text fill="red" x={xU} y={Nee+yTextOffset}>{thresholds.upperLabel}</text> : null
 
     return(
         <g>
@@ -69,21 +74,19 @@ function drawThresholds(thresholds : ThresholdPair, xScale, yScale) {
 function drawYTitle(options: CdfPanelOptions, width: number, height: number, xMargins: MarginPair, yMargins: MarginPair) {
   const title = options.yAxisTitle;
   if (title.text) {
-    const yoffset = 20;
+    const xoffset = title.xoffset;
 
-    //yMargins.lower = Math.max(yoffset + title.textSize, yMargins.lower);
-    let label_length = title.text.length * title.textSize / 6;
+    let label_length = title.text.length * title.textSize / 2.5;
 
     return (
       <g
-        transform={`translate(${-width/2},${-height/2+yMargins.upper+label_length} ) rotate(-90) `}
+        transform={`translate(${-width/2+xMargins.lower-xoffset},${-height/2+yMargins.upper+label_length} ) rotate(-90) `}
       >
         <text
-          alignmentBaseline="hanging"
-          textAnchor="middle"
           font-size={title.textSize}
           font-family="sans-serif"
           fill="#909090"
+          textLength={label_length}
         >
           {title.text}
         </text>
@@ -99,22 +102,19 @@ function drawYTitle(options: CdfPanelOptions, width: number, height: number, xMa
 function drawXTitle(options: CdfPanelOptions, width: number, height: number, xMargins: MarginPair, yMargins: MarginPair) {
   const title = options.xAxisTitle;
   if (title.text) {
-    const yoffset = 20;
+    const yoffset = title.yoffset;
 
-    let label_length = title.text.length * title.textSize / 6;
+    let label_length = title.text.length * title.textSize / 2.5;
 
     return (
       <g
-        transform={`translate(${width/2- xMargins.upper - label_length}, ${height/2 - yMargins.lower + yoffset}) `}
+        transform={`translate(${width/2 - xMargins.upper-label_length}, ${height/2 - yMargins.lower + yoffset}) `}
       >
         <text
-          alignmentBaseline="hanging"
-          textAnchor="middle"
-          //font-size={title.textSize}
-          font-size="12px"
+          font-size={title.textSize}
           font-family="sans-serif"
-          //fill={title.color}
           fill="#909090"
+          textLength={label_length}
         >
           {title.text}
         </text>
@@ -137,8 +137,6 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
     let xmax = Number.MIN_SAFE_INTEGER;
     let xmin = Number.MAX_SAFE_INTEGER;
     const lineWidth = options.linewidth || 3;
-
-    console.log(fieldConfig);
 
     let overriderOptions: ApplyFieldOverrideOptions = 
         {
@@ -211,8 +209,9 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
         .domain(yExtent as [number, number])
         .range([height/2 - yMargins.lower, -height/2+yMargins.upper]);
 
-    const thresholds = drawThresholds( options.thresholds, xScale, yScale ); 
-
+    if (options.showThresholds) {
+        const thresholds = drawThresholds( options.thresholds, xScale, yScale ); 
+    }
 
     series_points.forEach( s => {s.calc_data_points(xScale, yScale, xExtent);});
     let xAxis = d3.axisBottom(xScale);
@@ -224,10 +223,12 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
         xAxis.tickFormat(function(d){ return d + " " + fieldConfig.defaults.unit});
     }
 
-
     let yAxis = d3.axisLeft(yScale);
     if (options.showYGrid ) {
         yAxis = yAxis.tickSize(+xMargins.lower + xMargins.upper - width);
+    }
+
+    function onLabelClick(item: VizLegendItem, event: React.MouseEvent<HTMLDivElement>){
     }
 
     function onLegendClick(item, _color) {
@@ -263,7 +264,11 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
         setCount( count => count + 1 );
     }
 
-    const legend = getLegend(series_points, onLegendClick);
+    //console.log(series_points);
+
+    const legend = getLegend(series_points, onLegendClick, options.legendplacement, onLabelClick, options.legenddisplaymode);
+
+    let opts = { scales: { "x": { time: false, } } };
 
     return <div
             className={cx(

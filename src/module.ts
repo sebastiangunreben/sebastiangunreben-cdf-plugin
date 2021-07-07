@@ -21,10 +21,10 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
     .addCustomEditor({
      id:"xAxisTitle",
      path:"xAxisTitle",
-     name:"X Axis Title",
+     name:"X Axis Title / Size / Offset",
      category:["X Axis"],
      editor: TitleEditor,
-     defaultValue: {text : "XAxis Title", textSize : 12}
+     defaultValue: {text : "XAxis Title", textSize : 12, yoffset:30, showyoffset: true, showxoffset: false}
     })
     .addCustomEditor({
      id:"xMargins",
@@ -67,11 +67,10 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
     .addCustomEditor({
      id:"yAxisTitle",
      path:"yAxisTitle",
-     name:"Y Axis Title",
+     name:"Y Axis Title / Size / Offset",
      category:["Y Axis"],
      editor: TitleEditor,
-     //defaultValue: new Title("P(x <= X)","#909090", 12),
-     defaultValue: {text : "P(x <= X)", textSize : 12}
+     defaultValue: {text : "P(x <= X)", textSize : 12, xoffset: 30, showyoffset: false, showxoffset: true}
     })
     .addCustomEditor({
       id: 'yMargins',
@@ -95,26 +94,5 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
         description: "stroke width",
         editor: LinewidthEditor,
         defaultValue: 3,
-    })
-//  .addRadio({
-//    path: 'color',
-//    name: 'Circle color',
-//    defaultValue: 'red',
-//    settings: {
-//      options: [
-//        {
-//          value: 'red',
-//          label: 'Red',
-//        },
-//        {
-//          value: 'green',
-//          label: 'Green',
-//        },
-//        {
-//          value: 'blue',
-//          label: 'Blue',
-//        },
-//      ],
-//    }
-//  });
+    });
 });
