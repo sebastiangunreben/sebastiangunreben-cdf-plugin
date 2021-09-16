@@ -5,10 +5,8 @@ jump to the bottom to check out the steps to install this plugin.
 
 ## What does the CDF panel plugin show?
 
-The CDF panel plugin visualizes the cumulative distribution of a given series 
-values. Statistically speaking, it shows P(x <= X).
-It shows the frequency/probability P of a certain value "x" to be less than
-"X".
+The CDF panel plugin visualizes the (complementary) cumulative distribution of a given series of values.
+Statistically speaking, it shows P(x <= X). It shows the frequency/probability P of a certain value "x" to be less than "X".
 
 ![CDF in action 1](https://github.com/telekom/sebastiangunreben-cdf-plugin/blob/main/src/img/first.png?raw=true)
 
@@ -70,6 +68,7 @@ This panel allows a flavor of config options:
 ![Display config options](https://github.com/telekom/sebastiangunreben-cdf-plugin/blob/main/src/img/display.png?raw=true)
 * Change color per series
 * Change stroke witdth
+* Change to complementary distribution function 1-P(x <= X).
 
 # Learn more
 
