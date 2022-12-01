@@ -71,10 +71,11 @@ This panel allows a flavor of config options:
 * Change to complementary distribution function 1-P(x <= X).
 
 # Learn more
-
 * [Howto install this plugin in Grafana](https://grafana.com/docs/grafana/latest/plugins/installation/)
 * [CDF at Wikipedia](https://en.wikipedia.org/wiki/Cumulative_distribution_function)
 * [d3js](https://d3js.org/)
 * [ReactJS](https://reactjs.org/)
 * [TypeScript](https://www.typescriptlang.org/)
 
+# Contact
+For feature requests or bug reports, please contact me directly
