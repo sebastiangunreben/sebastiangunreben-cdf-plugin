@@ -12,6 +12,7 @@ import { ExtentsEditor } from './editors/ExtentsEditor';
 import { MarginPairEditor } from './editors/MarginPairEditor';
 import { ThresholdPairEditor } from './editors/ThresholdPairEditor';
 import { LinewidthEditor } from './editors/LinewidthEditor';
+import { ScalerEditor } from './editors/ScalerEditor';
 import { TitleEditor } from './editors/TitleEditor';
 import { FieldSetEditor } from './editors/FieldSetEditor';
 
@@ -24,7 +25,7 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
      name:"X Axis Title / Size / Offset",
      category:["X Axis"],
      editor: TitleEditor,
-     defaultValue: {text : "XAxis Title", textSize : 12, yoffset:30, showyoffset: true, showxoffset: false}
+     defaultValue: {text : "", textSize : 12, yoffset:30, showyoffset: true, showxoffset: false}
     })
     .addCustomEditor({
      id:"xMargins",
@@ -72,6 +73,22 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
      editor: TitleEditor,
      defaultValue: {text : "P(x <= X)", textSize : 12, xoffset: 30, showyoffset: false, showxoffset: true}
     })
+    .addBooleanSwitch({
+      path: 'showYThresholds',
+      name: 'Show thresholds',
+      category: ['Y Axis'],
+      defaultValue: false,
+    })
+    .addCustomEditor({
+     id:"ythresholds",
+     path:"ythresholds",
+     name:"Thresholds",
+     category:["Y Axis"],
+     editor: ThresholdPairEditor,
+     defaultValue: {"lower": null, "lowerLabel": "",
+                "upper": null, "upperLanel": "", },
+     showIf: config => config.showYThresholds,
+    })
     .addCustomEditor({
       id: 'yMargins',
       path: 'yMargins',
@@ -79,6 +96,14 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
       category: ['Y Axis'],
       editor: MarginPairEditor,
       defaultValue: {lower:40, upper:10},
+    })
+    .addCustomEditor({
+     id:"yAxisExtents",
+     path:"yAxisExtents",
+     name:"Y Axis Field (Min/Max)",
+     category:["Y Axis"],
+     editor: ExtentsEditor,
+     defaultValue: {min: "", max : "" },
     })
     .addBooleanSwitch({
       path: 'showYGrid',
@@ -94,5 +119,22 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
         description: "stroke width",
         editor: LinewidthEditor,
         defaultValue: 3,
+    })
+    .addCustomEditor({
+      id: "scaling",
+      path:"scaling",
+      name:"Scaling",
+      category: ["Display"],
+      description: "scaling factor",
+      editor: ScalerEditor,
+      defaultValue: 1,
+    })
+    .addBooleanSwitch({
+        id: "complementary",
+        path:"complementary",
+        name:"Use complementary function",
+        category: ["Display"],
+        description: "1 - P(x <= X) instead of P(x <= X)",
+        defaultValue: false,
     });
 });

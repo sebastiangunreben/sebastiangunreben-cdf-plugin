@@ -43,14 +43,38 @@ function getLegend(colNames, onLegendClick, _placement, _onLabelClick, displaymo
 /**
  * Draw threshold lines
  */
-function drawThresholds(thresholds : ThresholdPair, xScale, yScale) {
+function drawYThresholds(thresholds : ThresholdPair, xScale, yScale, xExt: Extent ) {
+
+    if(! thresholds ) return (<div/>);
+
+    let yU = thresholds.upper ? yScale(thresholds.upper): null;
+    let yL = thresholds.lower ? yScale(thresholds.lower): null;
+    let xmin = xScale(xExt[0]);
+    let xmax = xScale(xExt[1]);
+    let yTextOffset = -5;
+    
+    let tLower = yL ? <line x1={xmin} y1={yL} x2={xmax} y2={yL} stroke="red" /> : null; 
+    let tLowerLabel = yL ? <text fill="red" x={(xmax+xmin)/2} y={yL+yTextOffset}>{thresholds.lowerLabel}</text> : null
+    let tUpper = yU ? <line x1={xmin} y1={yU} x2={xmax} y2={yU} stroke="red" /> : null; 
+    let tUpperLabel = yU ? <text fill="red" x={(xmax+xmin)/2} y={yU+yTextOffset}>{thresholds.upperLabel}</text> : null
+
+    return(
+        <g>
+            {tLower}
+            {tLowerLabel}
+            {tUpper}
+            {tUpperLabel}
+        </g>
+    )
+}
+function drawThresholds(thresholds : ThresholdPair, xScale, yScale, yExt: Extent) {
 
     if(! thresholds ) return (<div/>);
 
     let xU = thresholds.upper ? xScale(thresholds.upper): null;
     let xL = thresholds.lower ? xScale(thresholds.lower): null;
-    let Ein = yScale(1);
-    let Nee = yScale(0);
+    let Ein = yScale(yExt[1]);
+    let Nee = yScale(yExt[0]);
     let yTextOffset = -5;
     
     let tLower = xL ? <line x1={xL} y1={Nee} x2={xL} y2={Ein} stroke="red" /> : null; 
@@ -134,6 +158,8 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
     const yMargins = { "lower": options.yMargins.lower || 0,
                         "upper": options.yMargins.upper || 0};
 
+    const scaling_factor = options.scaling || 1;
+
     let xmax = Number.MIN_SAFE_INTEGER;
     let xmin = Number.MAX_SAFE_INTEGER;
     const lineWidth = options.linewidth || 3;
@@ -163,19 +189,17 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
                 const cd = new ColData(
                         field.name,
                         s.name || " ",
-                        field.values.toArray().map(v => v as number),
+                        field.values.toArray().map(v => scaling_factor * v as number),
                         getColor(field, idx),
                         width,
                         height,
-                        -1,
+                        options.complementary,
                         field,
                         );
 
-                xmax = (xmax < field.state.calcs["max"]) 
-                    ? field.state.calcs["max"] : xmax;
-                xmin = (xmin > field.state.calcs["min"]) 
-                    ? field.state.calcs["min"] : xmin;
-                return cd
+                xmax = (xmax < cd.get_max()) ? cd.get_max() : xmax;
+                xmin = (xmin > cd.get_min()) ? cd.get_min() : xmin;
+                return cd;
                 });
 
     if (xmin == Number.MAX_SAFE_INTEGER || xmax == Number.MIN_SAFE_INTEGER ) {
@@ -191,7 +215,10 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
         options.xAxisExtents.max === 0 ? 0 : options.xAxisExtents.max || (xmax),
     ] as number[];
 
-    const yExtent = [0, 1] as number[];
+    const yExtent = [
+        options.yAxisExtents.min ? options.yAxisExtents.min : 0,
+        options.yAxisExtents.max ? options.yAxisExtents.max : 1,
+    ] as number[];
 
 
     const xScale = d3
@@ -209,11 +236,8 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
         .domain(yExtent as [number, number])
         .range([height/2 - yMargins.lower, -height/2+yMargins.upper]);
 
-    if (options.showThresholds) {
-        const thresholds = drawThresholds( options.thresholds, xScale, yScale ); 
-    }
 
-    series_points.forEach( s => {s.calc_data_points(xScale, yScale, xExtent);});
+    series_points.forEach( s => {s.calc_data_points(xScale, yScale, xExtent, yExtent);});
     let xAxis = d3.axisBottom(xScale);
     if (options.showXGrid ) {
         xAxis = xAxis.tickSize(+yMargins.upper + yMargins.lower - height);
@@ -226,6 +250,14 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
     let yAxis = d3.axisLeft(yScale);
     if (options.showYGrid ) {
         yAxis = yAxis.tickSize(+xMargins.lower + xMargins.upper - width);
+    }
+
+    if (options.showThresholds) {
+        const thresholds = drawThresholds( options.thresholds, xScale, yScale,
+yExtent ); 
+    }
+    if (options.showYThresholds) {
+        const ythresholds = drawYThresholds( options.ythresholds, xScale, yScale, xExtent ); 
     }
 
     function onLabelClick(item: VizLegendItem, event: React.MouseEvent<HTMLDivElement>){
@@ -310,6 +342,7 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
             { xTitle }
             { yTitle }
             { options.showThresholds ? thresholds : null }
+            { options.showYThresholds ? ythresholds : null }
             </svg>
             <div className={styles.textBox}>
                 {options.showSeriesCount && (
