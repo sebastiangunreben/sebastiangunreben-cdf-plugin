@@ -188,7 +188,7 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
                 const field = s.fields.find(field => field.type === "number");
                 const cd = new ColData(
                         field.name,
-                        s.name || " ",
+                        field.name || " ",
                         field.values.toArray().map(v => scaling_factor * v as number),
                         getColor(field, idx),
                         width,
