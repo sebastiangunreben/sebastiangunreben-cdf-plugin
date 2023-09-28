@@ -3,6 +3,7 @@
   "version": "0.2.5",
   "description": "Panel for the visualizations of P(X <= x)",
   "scripts": {
+
     "build": "grafana-toolkit plugin:build",
     "test": "grafana-toolkit plugin:test",
     "dev": "grafana-toolkit plugin:dev",
