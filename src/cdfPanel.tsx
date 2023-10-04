@@ -184,6 +184,7 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
         return colors[idx % colors.length];
     }
 
+
     const series_points = applyFieldOverrides(overriderOptions)
         .map((s, idx) => {
                 const field = s.fields.find(field => field.type === "number");

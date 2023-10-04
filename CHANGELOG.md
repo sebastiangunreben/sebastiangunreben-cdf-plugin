@@ -1,8 +1,11 @@
 # Changelog
 
-## 0.2.5
+## 0.2.6
 - bugfix:  with respect to newer InfluxDB interface (big thank you to Rene 
     Pilz)
+
+## 0.2.5
+- skipped
 
 ## 0.2.4
 - feature: added scaling factor to handle very large/small numbers
