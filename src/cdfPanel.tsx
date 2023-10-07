@@ -1,18 +1,16 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import * as d3 from 'd3';
-import {  UPlotConfigBuilder, UPlotChart,VizLayout, VizLegend, LegendDisplayMode, VizLegendItem } from '@grafana/ui';
-import { getColorByName, getColorForTheme, applyFieldOverrides, ConfigOverrideRule, PanelProps } from '@grafana/data';
+import { VizLegend, LegendDisplayMode, VizLegendItem } from '@grafana/ui';
+import { getColorForTheme, applyFieldOverrides, ConfigOverrideRule, PanelProps } from '@grafana/data';
 import { CdfPanelOptions } from 'types';
 import { ColData } from 'types';
-import { MarginPair } from 'types';
+import { MarginPair, Extents } from 'types';
 import { css, cx } from 'emotion';
 import { stylesFactory, useTheme } from '@grafana/ui';
-import { FALLBACK_COLOR, SeriesColorChangeHandler, SeriesVisibilityChangeBehavior, CustomScrollbar, EmptySearchResult, colors, SeriesColorPickerPopover } from '@grafana/ui';
-
+import { FALLBACK_COLOR,EmptySearchResult, colors } from '@grafana/ui';
 
 
 interface Props extends PanelProps<CdfPanelOptions> {}
-
 
 /**
  * Draw legend
@@ -43,7 +41,7 @@ function getLegend(colNames, onLegendClick, _placement, _onLabelClick, displaymo
 /**
  * Draw threshold lines
  */
-function drawYThresholds(thresholds : ThresholdPair, xScale, yScale, xExt: Extent ) {
+function drawYThresholds(thresholds : ThresholdPair, xScale, yScale, xExt: [number, number] ) {
 
     if(! thresholds ) return (<div/>);
 
@@ -164,6 +162,8 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
     let xmin = Number.MAX_SAFE_INTEGER;
     const lineWidth = options.linewidth || 3;
 
+    console.log(data)
+
     let overriderOptions: ApplyFieldOverrideOptions = 
         {
             data: data.series,
@@ -187,9 +187,12 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
     const series_points = applyFieldOverrides(overriderOptions)
         .map((s, idx) => {
                 const field = s.fields.find(field => field.type === "number");
+                //debugger;
+                //console.log(s.name);
+                //console.log(field)
                 const cd = new ColData(
-                        field.name,
-                        field.name || " ",
+                        s.name || "no name",
+                        s.name || " ",
                         field.values.toArray().map(v => scaling_factor * v as number),
                         getColor(field, idx),
                         width,
@@ -201,13 +204,11 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
                 xmax = (xmax < cd.get_max()) ? cd.get_max() : xmax;
                 xmin = (xmin > cd.get_min()) ? cd.get_min() : xmin;
                 return cd;
-                });
+      });
 
     if (xmin == Number.MAX_SAFE_INTEGER || xmax == Number.MIN_SAFE_INTEGER ) {
         return( <EmptySearchResult>Could not find anything matching your query</EmptySearchResult> );
     };
-
-    const panelId = id;
 
     const xTitle = drawXTitle(options, width, height, xMargins, yMargins);
     const yTitle = drawYTitle(options, width, height, xMargins, yMargins);
@@ -253,8 +254,8 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
         yAxis = yAxis.tickSize(+xMargins.lower + xMargins.upper - width);
     }
 
-    if (options.showThresholds) {
-        const thresholds = drawThresholds( options.thresholds, xScale, yScale,
+    if (options.showXThresholds) {
+        const xthresholds = drawThresholds( options.xthresholds, xScale, yScale,
 yExtent ); 
     }
     if (options.showYThresholds) {
@@ -267,7 +268,7 @@ yExtent );
     function onLegendClick(item, _color) {
         let color = theme.visualization ? 
             theme.visualization.getColorByName(_color) 
-            : getColorForTheme(_color,theme);
+            : "black";
         let mc: MatcherConfig = {id: "byName", options: item};
         let properties: DynamicConfigValue = { id: "color",
             value: {"fixedColor": color, "mode": "fixed"} };
@@ -324,7 +325,7 @@ yExtent );
                 ref={(node) => {
                 d3.select(node)  
                     .call(xAxis as any)
-                    .selectAll('line', 'path')
+                    .selectAll('line')
                     .attr('stroke', "#909090");
             }}
             />
@@ -332,7 +333,7 @@ yExtent );
                 ref={(node) => {
                 d3.select(node)
                     .call(yAxis as any)
-                    .selectAll('line', 'path')
+                    .selectAll('line')
                     .attr('stroke', "#909090");
             }}
             />
@@ -342,7 +343,7 @@ yExtent );
             </g>
             { xTitle }
             { yTitle }
-            { options.showThresholds ? thresholds : null }
+            { options.showXThresholds ? xthresholds : null }
             { options.showYThresholds ? ythresholds : null }
             </svg>
             <div className={styles.textBox}>

@@ -1,5 +1,4 @@
 import { Field } from '@grafana/data';
-type SeriesSize = 'sm' | 'md' | 'lg';
 
 export interface CdfPanelOptions {
   label: Label;
@@ -12,11 +11,11 @@ export interface CdfPanelOptions {
   yAxisExtents: Extents;
   ythresholds: ThresholdPair;
   yMargins: MarginPair;
-  thresholds: ThresholdPair;
-  ythresholds: ThresholdPair;
+  xthresholds: ThresholdPair;
   showXGrid: boolean;
   showYGrid: boolean;
-  showThresholds: boolean;
+  showXThresholds: boolean;
+  showYThresholds: boolean;
   legendplacement: LegendPlacement;
   legenddisplaymode: LegendDisplayMode;
   complementary: boolean;
@@ -31,40 +30,52 @@ export interface LegendPlacement {
 }
 
 export interface Label {
-    col: number,
+    col: number;
+}
+
+export interface Linewidth {
+    width: number
+}
+
+export interface Scaling {
+    scaling: number;
 }
 
 export interface Label {
-    col: number,
+    col: number;
 }
 
 export interface ThresholdPair {
     lower: number,
     lowerLabel: string,
     upper: number,
-    upperLabel: string,
+    upperLabel: string;
 }
 
 export interface MarginPair {
     lower: number,
-    upper: number,
+    upper: number
 }
 
 export interface Title {
     text: string,
     color: string,
     textSize: number,
+    showyoffset: boolean,
+    showxoffset: boolean,
+    yoffset: number,
+    xoffset: number
 }
 
 
 export interface XAxis {
     col: number,
-    inverted: boolean,
+    inverted: boolean
 }
 
 export interface Extents {
     min: number,
-    max: number,
+    max: number
 }
 
 export class ColData {
@@ -95,7 +106,7 @@ export class ColData {
   calc_data_points( xScale: Function, yScale: Function, xExtents: number[], yExtents: number[]  )
     {
         let num_val = this.mvalues.length;
-        this.point_list = Array.from(this.mvalues, (v, i, a) => {
+        this.point_list = Array.from(this.mvalues, (v, i) => {
             if( this.in_scale(v, xExtents)){
                 let yval = 0
                 if (this.complementary){

@@ -1,8 +1,7 @@
 # Changelog
 
 ## 0.2.6
-- bugfix:  with respect to newer InfluxDB interface (big thank you to Rene 
-    Pilz)
+- bugfix: adapted name of series
 
 ## 0.2.5
 - skipped

@@ -1,20 +1,12 @@
 import { PanelPlugin } from '@grafana/data';
 import { CdfPanelOptions } from './types';
 import { CdfPanel } from './cdfPanel';
-
-import { Extents } from './types';
-//import { Title } from './types';
-import { Linewidth } from './types';
-import { MarginPair } from './types';
-import { ThresholdPair } from './types';
-
 import { ExtentsEditor } from './editors/ExtentsEditor';
 import { MarginPairEditor } from './editors/MarginPairEditor';
 import { ThresholdPairEditor } from './editors/ThresholdPairEditor';
 import { LinewidthEditor } from './editors/LinewidthEditor';
 import { ScalerEditor } from './editors/ScalerEditor';
 import { TitleEditor } from './editors/TitleEditor';
-import { FieldSetEditor } from './editors/FieldSetEditor';
 
 export const plugin = new
 PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder => {
@@ -57,7 +49,7 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
      editor: ThresholdPairEditor,
      defaultValue: {"lower": null, "lowerLabel": "",
                 "upper": null, "upperLanel": "", },
-     showIf: config => config.showThresholds,
+     showIf: config => config.showXThresholds,
     })
     .addBooleanSwitch({
       path: 'showXGrid',
@@ -118,7 +110,7 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
         category: ["Display"],
         description: "stroke width",
         editor: LinewidthEditor,
-        defaultValue: 3,
+        defaultValue: {width: 3},
     })
     .addCustomEditor({
       id: "scaling",
@@ -127,10 +119,9 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
       category: ["Display"],
       description: "scaling factor",
       editor: ScalerEditor,
-      defaultValue: 1,
+      defaultValue: {scaling: 1},
     })
     .addBooleanSwitch({
-        id: "complementary",
         path:"complementary",
         name:"Use complementary function",
         category: ["Display"],

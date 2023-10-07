@@ -9,7 +9,7 @@ export const LinewidthEditor: React.FC<Props> = ({ value, onChange }) => {
   return (
         <Input
           type="number"
-          value={value}
+          value={value.width}
           min={1}
           max={30}
           title="stroke width"
