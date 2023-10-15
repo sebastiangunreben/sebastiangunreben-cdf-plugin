@@ -9,7 +9,6 @@ export const ExtentsEditor: React.FC<Props> = ({ value, onChange }) => (
   <div className="inputBox">
     <div className="inputBox">
       <Input
-        css=""
         type="number"
         value={value.min}
         title="Axis Min (leave blank for auto)"
@@ -21,7 +20,6 @@ export const ExtentsEditor: React.FC<Props> = ({ value, onChange }) => (
     </div>
     <div className="inputBox">
       <Input
-        css=""
         type="number"
         value={value.max}
         title="Axis Max (leave blank for auto)"

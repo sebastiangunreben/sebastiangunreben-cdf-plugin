@@ -9,7 +9,6 @@ export const MarginPairEditor: React.FC<Props> = ({ value, onChange }) => (
   <div className="inputBox">
     <div className="inputBox">
       <Input
-        css=""
         type="number"
         value={value.lower}
 //        title="Left Margin"
@@ -21,7 +20,6 @@ export const MarginPairEditor: React.FC<Props> = ({ value, onChange }) => (
     </div>
     <div className="inputBox">
       <Input
-        css=""
         type="number"
         value={value.upper}
 //        title="Right Margin"

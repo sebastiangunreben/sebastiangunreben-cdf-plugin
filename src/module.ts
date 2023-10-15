@@ -4,12 +4,12 @@ import { CdfPanel } from './cdfPanel';
 import { ExtentsEditor } from './editors/ExtentsEditor';
 import { MarginPairEditor } from './editors/MarginPairEditor';
 import { ThresholdPairEditor } from './editors/ThresholdPairEditor';
-import { LinewidthEditor } from './editors/LinewidthEditor';
-import { ScalerEditor } from './editors/ScalerEditor';
 import { TitleEditor } from './editors/TitleEditor';
+
 
 export const plugin = new
 PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder => {
+
   return builder
     .addCustomEditor({
      id:"xAxisTitle",
@@ -36,15 +36,15 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
      defaultValue: {min: "", max : "" },
     })
     .addBooleanSwitch({
-      path: 'showThresholds',
+      path: 'showXThresholds',
       name: 'Show thresholds',
       category: ['X Axis'],
       defaultValue: false,
     })
     .addCustomEditor({
-     id:"thresholds",
-     path:"thresholds",
-     name:"Thresholds",
+     id:"xthresholds",
+     path:"xthresholds",
+     name:"X Thresholds",
      category:["X Axis"],
      editor: ThresholdPairEditor,
      defaultValue: {"lower": null, "lowerLabel": "",
@@ -74,7 +74,7 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
     .addCustomEditor({
      id:"ythresholds",
      path:"ythresholds",
-     name:"Thresholds",
+     name:"Y Thresholds",
      category:["Y Axis"],
      editor: ThresholdPairEditor,
      defaultValue: {"lower": null, "lowerLabel": "",
@@ -103,23 +103,21 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
       category: ['Y Axis'],
       defaultValue: false,
     })
-    .addCustomEditor({
-        id: "linewidth",
+    .addNumberInput({
         path:"linewidth",
         name:"Linewidth",
         category: ["Display"],
         description: "stroke width",
-        editor: LinewidthEditor,
-        defaultValue: {width: 3},
+        settings: {integer: true},
+        defaultValue: 3,
     })
-    .addCustomEditor({
-      id: "scaling",
+    .addNumberInput({
       path:"scaling",
       name:"Scaling",
       category: ["Display"],
       description: "scaling factor",
-      editor: ScalerEditor,
-      defaultValue: {scaling: 1},
+      settings: {step: 0.01},
+      defaultValue: 1,
     })
     .addBooleanSwitch({
         path:"complementary",
@@ -128,4 +126,5 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
         description: "1 - P(x <= X) instead of P(x <= X)",
         defaultValue: false,
     });
+
 });

@@ -10,7 +10,6 @@ export const ThresholdPairEditor: React.FC<Props> = ({ value, onChange }) => (
     min (value, label)
     <div className="inputBox">
       <Input
-        css=""
         type="number"
         value={value.lower}
         onChange={(e) => {

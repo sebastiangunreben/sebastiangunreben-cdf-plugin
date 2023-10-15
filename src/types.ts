@@ -1,4 +1,5 @@
 import { Field } from '@grafana/data';
+import { LegendPlacement, LegendDisplayMode } from '@grafana/ui';
 
 export interface CdfPanelOptions {
   label: Label;
@@ -21,28 +22,16 @@ export interface CdfPanelOptions {
   complementary: boolean;
 }
 
-export interface LegendDisplayMode {
-    display : "Table" | "List";
-}
-
-export interface LegendPlacement {
-    placement : "bottom" | "right";
-}
-
 export interface Label {
     col: number;
 }
 
 export interface Linewidth {
-    width: number
+    width: number;
 }
 
 export interface Scaling {
     scaling: number;
-}
-
-export interface Label {
-    col: number;
 }
 
 export interface ThresholdPair {
@@ -79,14 +68,14 @@ export interface Extents {
 }
 
 export class ColData {
-  point_list: string = "";
-  private readonly mvalues: Array<number>;
-  private alignedData: Array<Array<number>> = [];
+  point_list = "";
+  private readonly mvalues: number[];
+  private alignedData: number[][] = [];
   constructor(
     public name: string,
     public displayName: string,
     public val: number[],
-    public color: string,
+    public color: string | undefined,
     public width: number,
     public height: number,
     public complementary: boolean,
@@ -119,6 +108,7 @@ export class ColData {
                     return obj;
                 }
             }
+            return "";
         }).join(" ");
     }
    get_alignedData(){

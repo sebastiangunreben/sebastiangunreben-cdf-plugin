@@ -1,13 +1,9 @@
-import React, {useState} from 'react';
+import React from 'react';
 import * as d3 from 'd3';
-import { VizLegend, LegendDisplayMode, VizLegendItem } from '@grafana/ui';
-import { getColorForTheme, applyFieldOverrides, ConfigOverrideRule, PanelProps } from '@grafana/data';
-import { CdfPanelOptions } from 'types';
-import { ColData } from 'types';
-import { MarginPair, Extents } from 'types';
-import { css, cx } from 'emotion';
-import { stylesFactory, useTheme } from '@grafana/ui';
-import { FALLBACK_COLOR,EmptySearchResult, colors } from '@grafana/ui';
+import { VizLegend, LegendDisplayMode, VizLegendItem, LegendPlacement,useTheme2, useStyles2,EmptySearchResult, colors } from '@grafana/ui';
+import { GrafanaTheme2, ApplyFieldOverrideOptions, applyFieldOverrides, PanelProps, Field, Vector } from '@grafana/data';
+import { CdfPanelOptions, ColData, ThresholdPair, MarginPair } from './types';
+import { cx, css } from '@emotion/css';
 
 
 interface Props extends PanelProps<CdfPanelOptions> {}
@@ -15,35 +11,30 @@ interface Props extends PanelProps<CdfPanelOptions> {}
 /**
  * Draw legend
  */
-function getLegend(colNames, onLegendClick, _placement, _onLabelClick, displaymode ) {
-     let legends = colNames.map<VizLegendItem>((f, i) => {
+function getLegend(colNames: ColData[], placement: LegendPlacement, _onLabelClick: ((item: VizLegendItem<any>, event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void) | undefined, displaymode: LegendDisplayMode ) {
+    //debugger; 
+    let legends = colNames.map<VizLegendItem>((f, i) => {
         return {
-            color: f.color ?? FALLBACK_COLOR,
+            color: f.color ?? "black",
             disabled: false,
             label: f.displayName ?? "",
             yAxis: 1,
             fieldIndex: f.field.state?.origin,
             getItemKey: () => (f.displayName ?? "") + i,
         };});
-
-    let ldm = (displaymode === "Table") ? LegendDisplayMode.Table 
-            : LegendDisplayMode.List;;
-    let placement = _placement ? _placement : "bottom";
-
     return  <VizLegend 
             items={legends} 
             placement={placement}
-            displayMode={ldm} 
-            onLabelClick={_onLabelClick}
-            onSeriesColorChange={onLegendClick} />;
+            displayMode={displaymode} 
+            onLabelClick={_onLabelClick} />;
 }
 
 /**
  * Draw threshold lines
  */
-function drawYThresholds(thresholds : ThresholdPair, xScale, yScale, xExt: [number, number] ) {
+function drawYThresholds(thresholds: ThresholdPair, xScale: Function, yScale: Function, xExt: [number, number] ) {
 
-    if(! thresholds ) return (<div/>);
+    if(! thresholds ) { return (<div/>); }
 
     let yU = thresholds.upper ? yScale(thresholds.upper): null;
     let yL = thresholds.lower ? yScale(thresholds.lower): null;
@@ -65,9 +56,10 @@ function drawYThresholds(thresholds : ThresholdPair, xScale, yScale, xExt: [numb
         </g>
     )
 }
-function drawThresholds(thresholds : ThresholdPair, xScale, yScale, yExt: Extent) {
 
-    if(! thresholds ) return (<div/>);
+function drawThresholds(thresholds: ThresholdPair, xScale: Function, yScale: Function, yExt: [number, number]) {
+
+    if(! thresholds ) { return (<div/>); }
 
     let xU = thresholds.upper ? xScale(thresholds.upper): null;
     let xL = thresholds.lower ? xScale(thresholds.lower): null;
@@ -105,8 +97,8 @@ function drawYTitle(options: CdfPanelOptions, width: number, height: number, xMa
         transform={`translate(${-width/2+xMargins.lower-xoffset},${-height/2+yMargins.upper+label_length} ) rotate(-90) `}
       >
         <text
-          font-size={title.textSize}
-          font-family="sans-serif"
+          fontSize={title.textSize}
+          fontFamily="sans-serif"
           fill="#909090"
           textLength={label_length}
         >
@@ -133,8 +125,8 @@ function drawXTitle(options: CdfPanelOptions, width: number, height: number, xMa
         transform={`translate(${width/2 - xMargins.upper-label_length}, ${height/2 - yMargins.lower + yoffset}) `}
       >
         <text
-          font-size={title.textSize}
-          font-family="sans-serif"
+          fontSize={title.textSize}
+          fontFamily="sans-serif"
           fill="#909090"
           textLength={label_length}
         >
@@ -146,11 +138,9 @@ function drawXTitle(options: CdfPanelOptions, width: number, height: number, xMa
   return null;
 }
 
-export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
-, fieldConfig}) => {
-    const [count, setCount] = useState(0);
-    const theme = useTheme();
-    const styles = getStyles();
+export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id, fieldConfig}) => {
+    const theme = useTheme2();
+    const styles = useStyles2(getStyles);
     const xMargins = { "lower": options.xMargins.lower || 0, 
                         "upper": options.xMargins.upper || 0};
     const yMargins = { "lower": options.yMargins.lower || 0,
@@ -172,8 +162,8 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
             replaceVariables: (value: string) => { return value },
         };
 
-    function getColor( field, idx ) {
-        if (field.config) {
+    function getColor( field: Field<any, Vector<any>> | undefined, idx: number ) {
+        if (field?.config) {
             if( field.config.color ) {
                 if (field.config.color.hasOwnProperty("fixedColor") ) {
                     return field.config.color["fixedColor"];
@@ -182,8 +172,44 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
         }
         return colors[idx % colors.length];
     }
+/*
+    function onLabelClick(item: VizLegendItem, event: React.MouseEvent<HTMLDivElement>){
+    }
+    */
+/*
+    function onLegendClick(item, _color) {
+      let color = theme.visualization ? 
+          theme.visualization.getColorByName(_color) 
+          : "black";
+      let mc: MatcherConfig = {id: "byName", options: item};
+      let properties: DynamicConfigValue = { id: "color",
+          value: {"fixedColor": color, "mode": "fixed"} };
+      let configOverrideRule: ConfigOverrideRule = {
+          matcher: mc,
+          properties: [properties]};
 
-
+      let updated = false;
+      fieldConfig.overrides = fieldConfig.overrides.map((c) => {
+          if(    c.matcher.id == "byName" 
+              && c.matcher.options == item ) {
+              c.properties = c.properties.map((i) => {
+                  if( i.id == "color" && !updated ) {
+                      updated = true;
+                      return properties; }
+                  else {
+                      return i ?!updated : {};
+                  }
+              });
+          }
+          if (c.properties.length > 0 ) { return c ; };
+      });
+      if (! updated ) {
+          fieldConfig.overrides = 
+              [...fieldConfig.overrides, ...configOverrideRule];
+      }
+      setCount( count => count + 1 );
+  }
+*/
     const series_points = applyFieldOverrides(overriderOptions)
         .map((s, idx) => {
                 const field = s.fields.find(field => field.type === "number");
@@ -193,35 +219,34 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
                 const cd = new ColData(
                         s.name || "no name",
                         s.name || " ",
-                        field.values.toArray().map(v => scaling_factor * v as number),
+                        field!.values.toArray().map(v => scaling_factor * v as number),
                         getColor(field, idx),
                         width,
                         height,
                         options.complementary,
-                        field,
+                        field!,
                         );
 
-                xmax = (xmax < cd.get_max()) ? cd.get_max() : xmax;
-                xmin = (xmin > cd.get_min()) ? cd.get_min() : xmin;
+                xmax = (xmax < cd.get_max()!) ? cd.get_max()! : xmax!;
+                xmin = (xmin > cd.get_min()!) ? cd.get_min()! : xmin!;
                 return cd;
       });
 
-    if (xmin == Number.MAX_SAFE_INTEGER || xmax == Number.MIN_SAFE_INTEGER ) {
+    if (xmin === Number.MAX_SAFE_INTEGER || xmax === Number.MIN_SAFE_INTEGER ) {
         return( <EmptySearchResult>Could not find anything matching your query</EmptySearchResult> );
     };
 
-    const xTitle = drawXTitle(options, width, height, xMargins, yMargins);
+    let xTitle = drawXTitle(options, width, height, xMargins, yMargins);
     const yTitle = drawYTitle(options, width, height, xMargins, yMargins);
     const xExtent = [
         options.xAxisExtents.min === 0 ? 0 : options.xAxisExtents.min || (xmin),
         options.xAxisExtents.max === 0 ? 0 : options.xAxisExtents.max || (xmax),
-    ] as number[];
+    ] as [number, number];
 
     const yExtent = [
         options.yAxisExtents.min ? options.yAxisExtents.min : 0,
         options.yAxisExtents.max ? options.yAxisExtents.max : 1,
-    ] as number[];
-
+    ] as [number, number];
 
     const xScale = d3
         .scaleLinear()
@@ -246,7 +271,8 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
     }
 
     if ( fieldConfig.defaults.hasOwnProperty("unit") ) {
-        xAxis.tickFormat(function(d){ return d + " " + fieldConfig.defaults.unit});
+        //xAxis.tickFormat(function(d){ return d + " " + fieldConfig.defaults.unit});
+        options.xAxisTitle.text = fieldConfig.defaults.unit!
     }
 
     let yAxis = d3.axisLeft(yScale);
@@ -254,69 +280,33 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id
         yAxis = yAxis.tickSize(+xMargins.lower + xMargins.upper - width);
     }
 
+    let xthresholds;
     if (options.showXThresholds) {
-        const xthresholds = drawThresholds( options.xthresholds, xScale, yScale,
-yExtent ); 
+        xthresholds = drawThresholds( options.xthresholds, xScale, yScale, yExtent ); 
     }
+    let ythresholds;
     if (options.showYThresholds) {
-        const ythresholds = drawYThresholds( options.ythresholds, xScale, yScale, xExtent ); 
-    }
-
-    function onLabelClick(item: VizLegendItem, event: React.MouseEvent<HTMLDivElement>){
-    }
-
-    function onLegendClick(item, _color) {
-        let color = theme.visualization ? 
-            theme.visualization.getColorByName(_color) 
-            : "black";
-        let mc: MatcherConfig = {id: "byName", options: item};
-        let properties: DynamicConfigValue = { id: "color",
-            value: {"fixedColor": color, "mode": "fixed"} };
-        let configOverrideRule: ConfigOverrideRule = {
-            matcher: mc,
-            properties: [properties]};
-
-        let updated = false;
-        fieldConfig.overrides = fieldConfig.overrides.map((c) => {
-            if(    c.matcher.id == "byName" 
-                && c.matcher.options == item ) {
-                c.properties = c.properties.map((i) => {
-                    if( i.id == "color" && !updated ) {
-                        updated = true;
-                        return properties; }
-                    else {
-                        return i ?!updated : {};
-                    }
-                });
-            }
-            if (c.properties.length > 0 ) { return c ; };
-        });
-        if (! updated ) {
-            fieldConfig.overrides = 
-                [...fieldConfig.overrides, ...configOverrideRule];
-        }
-        setCount( count => count + 1 );
+        ythresholds = drawYThresholds( options.ythresholds, xScale, yScale, xExtent ); 
     }
 
     //console.log(series_points);
 
-    const legend = getLegend(series_points, onLegendClick, options.legendplacement, onLabelClick, options.legenddisplaymode);
+    const legend = getLegend(series_points, "bottom", undefined, LegendDisplayMode.List);
 
-    let opts = { scales: { "x": { time: false, } } };
 
-    return <div
-            className={cx(
-                    styles.wrapper,
-                    css`
-                    width: ${width}px;
-                    height: ${height}px;
-                    `
-                    )}
+    return <div 
+                className={cx(
+                  styles.wrapper,
+                  css`
+                  width: ${width}px;
+                  height: ${height}px;
+                  `
+                  )} 
             >
             <svg
-            className={styles.svg}
+            className={cx(styles.svg)}
             width={width}
-            height={height}
+            height={height-40}
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
             viewBox={`-${width / 2} -${height / 2} ${width} ${height}`}
@@ -338,36 +328,25 @@ yExtent );
             }}
             />
             <g transform={`translate(0,0)`}>
-                { series_points.map( v => {
-                    return <polyline id={v.displayName} fill="none" stroke={v.color} stroke-width={lineWidth} points={v.point_list} />; } ) }
+                { s eries_points.map( v => {
+                    return <polyline key="some" id={v.displayName} fill="none" stroke={v.color} strokeWidth={lineWidth} points={v.point_list} />; } ) }
             </g>
             { xTitle }
             { yTitle }
             { options.showXThresholds ? xthresholds : null }
             { options.showYThresholds ? ythresholds : null }
             </svg>
-            <div className={styles.textBox}>
-                {options.showSeriesCount && (
-                    <div
-                    className={css`
-                    font-size: ${theme.typography.size[options.seriesCountSize]};
-                    `}
-                    >
-                    Number of series: {data.series.length},
-                    xmin: {xmin}, xmax: {xmax}
-                    </div>
-                    )}
+            <div className={cx(styles.textBox)}>
+                {legend}
             </div>
-                <div className={styles.textBox}>
-                    {legend}
-                </div>
+            
             </div>
 };
 
-const getStyles = stylesFactory(() => {
-  return {
+const getStyles = (theme: GrafanaTheme2) => ({
     wrapper: css`
       position: relative;
+      overflow: visible;
     `,
     svg: css`
       position: absolute;
@@ -394,6 +373,5 @@ const getStyles = stylesFactory(() => {
     `,
     axisColor: css`
       stroke: red;
-    `,
-  };
+    `
 });
