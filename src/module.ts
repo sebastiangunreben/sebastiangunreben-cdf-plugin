@@ -108,7 +108,7 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
         name:"Linewidth",
         category: ["Display"],
         description: "stroke width",
-        settings: {integer: true},
+        settings: {integer: true, min: 1},
         defaultValue: 3,
     })
     .addNumberInput({
@@ -116,7 +116,7 @@ PanelPlugin<CdfPanelOptions>(CdfPanel).useFieldConfig().setPanelOptions(builder 
       name:"Scaling",
       category: ["Display"],
       description: "scaling factor",
-      settings: {step: 0.01},
+      settings: {step: 0.000001},
       defaultValue: 1,
     })
     .addBooleanSwitch({

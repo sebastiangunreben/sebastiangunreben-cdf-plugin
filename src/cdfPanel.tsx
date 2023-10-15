@@ -328,7 +328,7 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id, fi
             }}
             />
             <g transform={`translate(0,0)`}>
-                { s eries_points.map( v => {
+                { series_points.map( v => {
                     return <polyline key="some" id={v.displayName} fill="none" stroke={v.color} strokeWidth={lineWidth} points={v.point_list} />; } ) }
             </g>
             { xTitle }
