@@ -71,7 +71,7 @@ This panel allows a flavor of config options:
 * Change to complementary distribution function 1-P(x <= X).
 
 ### Contact
-For feature request or bug reporting please use sebastian.gunreben@telekon.de.
+For feature request or bug reporting please use sebastian.gunreben@telekom.de.
 
 # Learn more
 * [Howto install this plugin in Grafana](https://grafana.com/docs/grafana/latest/plugins/installation/)
