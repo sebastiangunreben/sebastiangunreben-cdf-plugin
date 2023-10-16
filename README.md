@@ -1,6 +1,6 @@
 # Cumulative Distribution Function (CDF) Panel
 
-If you already know what a CDF is you may skip the next sections and directly
+If you already know what a CDF is, you may skip the next sections and directly
 jump to the bottom to check out the steps to install this plugin.
 
 ## What does the CDF panel plugin show?
@@ -29,7 +29,7 @@ A query responses with the following series:
 The time values (t1, t2, t3, t4) are ignored and not processed.
 Only relevant are the values 1, 5, 3, 2.
 The probability of a value "x" to be less than X=3 is P(x <= 3) = 0.75
-as the values 1, 2, 3 are equal or less than 3 and these are 3 of of 4 values.
+as the values 1, 2, 3 are equal or less than 3 and these are 3 out of 4 values.
 
 ### Properties
 If "x" is less than the smallest value of the series, the probability is zero.
@@ -39,7 +39,7 @@ one.
 ## How to use this panel?
 This panel has been developed together with influxdb.
 However, as the series responds with a "number" series, any other db
-fulfilling this requirement is fine. Per query, the first "number" 
+fulfilling this requirement is fine, too. Per query, the first "number" 
 field is evaluated.
 
 The panel displays on the x-axis, the value range and on the y-axis the
