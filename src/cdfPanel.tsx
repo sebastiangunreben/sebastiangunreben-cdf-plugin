@@ -217,8 +217,8 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id, fi
                 //console.log(s.name);
                 //console.log(field)
                 const cd = new ColData(
-                        field!.name || "no name",
-                        field!.name || " ",
+                        s.name ? s.name : field!.name,
+                        s.name ? s.name : field!.name,
                         field!.values.toArray().map(v => scaling_factor * v as number),
                         getColor(field, idx),
                         width,
