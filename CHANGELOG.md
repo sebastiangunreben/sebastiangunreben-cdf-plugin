@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.7
+- bugfix: alias of series has not been considered
+
 ## 0.2.6
 - bugfix: adapted name of series
 
