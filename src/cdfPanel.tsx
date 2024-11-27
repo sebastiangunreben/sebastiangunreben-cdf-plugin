@@ -152,8 +152,6 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id, fi
     let xmin = Number.MAX_SAFE_INTEGER;
     const lineWidth = options.linewidth || 3;
 
-    console.log(data)
-
     let overriderOptions: ApplyFieldOverrideOptions = 
         {
             data: data.series,
@@ -172,51 +170,10 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id, fi
         }
         return colors[idx % colors.length];
     }
-/*
-    function onLabelClick(item: VizLegendItem, event: React.MouseEvent<HTMLDivElement>){
-    }
-    */
-/*
-    function onLegendClick(item, _color) {
-      let color = theme.visualization ? 
-          theme.visualization.getColorByName(_color) 
-          : "black";
-      let mc: MatcherConfig = {id: "byName", options: item};
-      let properties: DynamicConfigValue = { id: "color",
-          value: {"fixedColor": color, "mode": "fixed"} };
-      let configOverrideRule: ConfigOverrideRule = {
-          matcher: mc,
-          properties: [properties]};
-
-      let updated = false;
-      fieldConfig.overrides = fieldConfig.overrides.map((c) => {
-          if(    c.matcher.id == "byName" 
-              && c.matcher.options == item ) {
-              c.properties = c.properties.map((i) => {
-                  if( i.id == "color" && !updated ) {
-                      updated = true;
-                      return properties; }
-                  else {
-                      return i ?!updated : {};
-                  }
-              });
-          }
-          if (c.properties.length > 0 ) { return c ; };
-      });
-      if (! updated ) {
-          fieldConfig.overrides = 
-              [...fieldConfig.overrides, ...configOverrideRule];
-      }
-      setCount( count => count + 1 );
-  }
-*/
-
+    
     const series_points = applyFieldOverrides(overriderOptions)
         .map((s, idx) => {
                 const field = s.fields.find(field => field.type === "number");
-                //debugger;
-                //console.log(s.name);
-                //console.log(field)
                 const cd = new ColData(
                         s.name ? s.name : field!.name,
                         field!.config.displayName ? field!.config.displayName : (s.name ? s.name : field!.name),
@@ -272,7 +229,6 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id, fi
     }
 
     if ( fieldConfig.defaults.hasOwnProperty("unit") ) {
-        //xAxis.tickFormat(function(d){ return d + " " + fieldConfig.defaults.unit});
         options.xAxisTitle.text = fieldConfig.defaults.unit!
     }
 
@@ -289,11 +245,8 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id, fi
     if (options.showYThresholds) {
         ythresholds = drawYThresholds( options.ythresholds, xScale, yScale, xExtent ); 
     }
-
-    //console.log(series_points);
-
+    
     const legend = getLegend(series_points, "bottom", undefined, LegendDisplayMode.List);
-
 
     return <div 
                 className={cx(

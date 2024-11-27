@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.9
+- cleanup
+
 ## 0.2.8
 - bugfix: displayName is now considered
 
