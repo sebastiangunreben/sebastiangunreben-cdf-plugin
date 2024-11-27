@@ -1,7 +1,7 @@
 import React from 'react';
 import * as d3 from 'd3';
 import { VizLegend, LegendDisplayMode, VizLegendItem, LegendPlacement,useTheme2, useStyles2,EmptySearchResult, colors } from '@grafana/ui';
-import { GrafanaTheme2, ApplyFieldOverrideOptions, applyFieldOverrides, PanelProps, Field, Vector } from '@grafana/data';
+import { GrafanaTheme2, ApplyFieldOverrideOptions, applyFieldOverrides, PanelProps, Field } from '@grafana/data';
 import { CdfPanelOptions, ColData, ThresholdPair, MarginPair } from './types';
 import { cx, css } from '@emotion/css';
 
@@ -162,7 +162,7 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id, fi
             replaceVariables: (value: string) => { return value },
         };
 
-    function getColor( field: Field<any, Vector<any>> | undefined, idx: number ) {
+    function getColor( field: Field<any> | undefined, idx: number ) {
         if (field?.config) {
             if( field.config.color ) {
                 if (field.config.color.hasOwnProperty("fixedColor") ) {
@@ -218,7 +218,7 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id, fi
                 //console.log(field)
                 const cd = new ColData(
                         s.name ? s.name : field!.name,
-                        s.name ? s.name : field!.name,
+                        field!.config.displayName ? field!.config.displayName : (s.name ? s.name : field!.name),
                         field!.values.toArray().map(v => scaling_factor * v as number),
                         getColor(field, idx),
                         width,
@@ -227,8 +227,8 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id, fi
                         field!,
                         );
 
-                xmax = (xmax < cd.get_max()!) ? cd.get_max()! : xmax!;
-                xmin = (xmin > cd.get_min()!) ? cd.get_min()! : xmin!;
+                xmax = Math.max(xmax, cd.get_max() || Number.MIN_SAFE_INTEGER);
+                xmin = Math.min(xmin, cd.get_min() || Number.MAX_SAFE_INTEGER);
                 return cd;
       });
 
