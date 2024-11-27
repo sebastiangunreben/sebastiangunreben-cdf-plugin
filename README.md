@@ -8,7 +8,7 @@ jump to the bottom to check out the steps to install this plugin.
 The CDF panel plugin visualizes the (complementary) cumulative distribution of a given series of values.
 Statistically speaking, it shows P(x <= X). It shows the frequency/probability P of a certain value "x" to be less than "X".
 
-![CDF in action 1](https://github.com/telekom/sebastiangunreben-cdf-plugin/blob/main/src/img/first.png?raw=true)
+![CDF in action 1](https://github.com/telekom/sebastiangunreben-cdf-plugin/blob/main/src/img/sample.png?raw=true)
 
 The CDF may be used to quantify the amount of outliers not fitting into the
 expection of the value distribution.
