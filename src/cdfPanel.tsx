@@ -185,8 +185,8 @@ export const CdfPanel: React.FC<Props> = ({ options, data, width, height, id, fi
                         field!,
                         );
 
-                xmax = Math.max(xmax, cd.get_max() || Number.MIN_SAFE_INTEGER);
-                xmin = Math.min(xmin, cd.get_min() || Number.MAX_SAFE_INTEGER);
+                xmax = Math.max(xmax, cd.get_max() ?? Number.MIN_SAFE_INTEGER);
+                xmin = Math.min(xmin, cd.get_min() ?? Number.MAX_SAFE_INTEGER);
                 return cd;
       });
 

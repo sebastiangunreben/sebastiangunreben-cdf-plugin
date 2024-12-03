@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.10
+- bugfix when calculating xmin and xmax values
+
 ## 0.2.9
 - cleanup
 
