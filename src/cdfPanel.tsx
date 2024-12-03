@@ -5,7 +5,6 @@ import { GrafanaTheme2, ApplyFieldOverrideOptions, applyFieldOverrides, PanelPro
 import { CdfPanelOptions, ColData, ThresholdPair, MarginPair } from './types';
 import { cx, css } from '@emotion/css';
 
-
 interface Props extends PanelProps<CdfPanelOptions> {}
 
 /**

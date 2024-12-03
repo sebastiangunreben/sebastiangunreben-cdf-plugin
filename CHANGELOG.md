@@ -1,12 +1,8 @@
 # Changelog
 
-## 0.2.10
+## 0.3.0
 - bugfix when calculating xmin and xmax values
-
-## 0.2.9
 - cleanup
-
-## 0.2.8
 - bugfix: displayName is now considered
 
 ## 0.2.7
